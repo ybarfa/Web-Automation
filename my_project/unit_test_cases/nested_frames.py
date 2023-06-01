@@ -1,60 +1,37 @@
-# from selenium import webdriver
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-# from selenium.common.exceptions import NoSuchElementException
-# from my_project.utils.xpath import *
-# import json
-# import os
-#
-# current_directory = os.getcwd()
-# parent_directory = os.path.dirname(current_directory)
-#
-# config_path = os.path.join(parent_directory, "configuration", "config.json")
-#
-# with open(config_path, "r") as configuration:
-#     config_data = json.load(configuration)
-#
-# try:
-#     driver = webdriver.Chrome()
-#     driver.get(config_data["url"])
-#     driver.maximize_window()
-#
-#     frames = driver.find_element(By.XPATH, '')
-#
-# except NoSuchElementException:
-#     print("No Such Element Found.")
-#
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-# Set up the Selenium webdriver
+import time
+
 driver = webdriver.Chrome()
-# Navigate to the Nested Frames page
-driver.get("https://the-internet.herokuapp.com/nested_frames")
-# Find the top frame
-driver.switch_to.frame("frame-top")
-# Find the left frame within the top frame
-driver.switch_to.frame("frame-left")
-# Print the content of the left frame
-print(driver.find_element(By.TAG_NAME, "body").text)
-# Switch back to the top frame
+driver.get("https://the-internet.herokuapp.com/")
+driver.maximize_window()
+
+element=driver.find_element(By.XPATH,'//a[@href="/nested_frames"]')
+element.click()
+
+frame_top = driver.find_element(By.XPATH, '//frame[@name="frame-top"]')
+driver.switch_to.frame(frame_top)
+
+frame_left = driver.find_element(By.XPATH, '//frame[@name="frame-left"]')
+driver.switch_to.frame(frame_left)
+text4 = driver.find_element(By.XPATH, '//body[contains(text(), "LEFT")]').text
+print(text4)
+
+driver.switch_to.parent_frame()
+frame_middle = driver.find_element(By.XPATH, '//frame[@name="frame-middle"]')
+driver.switch_to.frame(frame_middle)
+text=driver.find_element(By.XPATH,'//div[@id="content"]').text
+print(text)
+
+driver.switch_to.parent_frame()
+frame_right = driver.find_element(By.XPATH, '//frame[@name="frame-right"]')
+driver.switch_to.frame(frame_right)
+text2 = driver.find_element(By.XPATH, '//body[contains(text(), "RIGHT")]').text
+print(text2)
+
 driver.switch_to.default_content()
-# Find the middle frame within the top frame
-driver.switch_to.frame("frame-middle")
-# Print the content of the middle frame
-print(driver.find_element(By.TAG_NAME, "body").text)
-# Switch back to the top frame
-driver.switch_to.default_content()
-# Find the right frame within the top frame
-driver.switch_to.frame("frame-right")
-# Print the content of the right frame
-print(driver.find_element(By.TAG_NAME, "body").text)
-# Switch back to the top frame
-driver.switch_to.default_content()
-# Find the bottom frame
-driver.switch_to.frame("frame-bottom")
-# Print the content of the bottom frame
-print(driver.find_element(By.TAG_NAME, "body").text)
-# Close the browser
-driver.quit()
+frame_bottom = driver.find_element(By.XPATH, '//frame[@name="frame-bottom"]')
+driver.switch_to.frame(frame_bottom)
+text3=driver.find_element(By.XPATH, '//body[contains(text(), "BOTTOM")]').text
+print(text3)
+time.sleep(3)
